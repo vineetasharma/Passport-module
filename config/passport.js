@@ -20,12 +20,14 @@ module.exports = function(passport) {
 
     // used to serialize the user for the session
     passport.serializeUser(function(user, done) {
+        console.log('in serializeuser'+user.id);
         done(null, user.id);
     });
 
     // used to deserialize the user
     passport.deserializeUser(function(id, done) {
         User.findById(id, function(err, user) {
+            console.log('in deserialize'+user);
             done(err, user);
         });
     });
@@ -151,12 +153,14 @@ module.exports = function(passport) {
                         return done(err);
 
                     if (user) {
+                        console.log('in facebook'+user);
 
                         // if there is a user id already but no token (user was linked at one point and then removed)
                         if (!user.facebook.token) {
                             user.facebook.token = token;
                             user.facebook.name  = profile.name.givenName + ' ' + profile.name.familyName;
                             user.facebook.email = (profile.emails[0].value || '').toLowerCase();
+
 
                             user.save(function(err) {
                                 if (err)
